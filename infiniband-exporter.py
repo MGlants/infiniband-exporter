@@ -270,6 +270,9 @@ class InfinibandCollector(object):
             if self.node_name_map:
                 ibqueryerrors_args.append('--node-name-map')
                 ibqueryerrors_args.append(self.node_name_map)
+            if args.ca_name:
+                ibqueryerrors_args.append('--Ca')
+                ibqueryerrors_args.append(args.ca_name)
             process = subprocess.Popen(ibqueryerrors_args,
                                        stdout=subprocess.PIPE)
             ibqueryerrors = process.communicate()[0].decode("utf-8")
@@ -368,7 +371,12 @@ empty, ibqueryerrors will be launched as needed by this collector')
         dest='node_name_map',
         help='Node name map used by ibqueryerrors. Ccan also be set with env \
 var NODE_NAME_MAP')
-
+    parser.add_argument(
+        '--ca_name',
+        type=str,
+        help='ibqueryerrors ca_name for different infiniband ports')
+    parser.add_argument("--verbose", help="increase output verbosity",
+                        action="store_true")
     args = parser.parse_args()
 
     if not which("ibqueryerrors"):
